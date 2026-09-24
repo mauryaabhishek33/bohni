@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bohni &mdash; UPI Alerts and Bills</title>
+<meta name="description" content="Bohni says every UPI payment out loud, so a shopkeeper never has to look away from the customer. Every payment recorded, bills and GST invoices shared as PDF, and all of it kept on the phone.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0E4D5C">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<style>
+/* ===========================================================================
+   Bohni — landing page
+   Palette, type stacks and the 2px-radius / hairline-rule language are taken
+   from playstore/feature-graphic.html (:root, lines 3-27) so this page and the
+   Play artwork read as one identity.
+
+   Every colour is declared at :root. The dark block only re-points tokens.
+   No webfonts: system stacks only, which is also what the canvas artwork used.
+   =========================================================================== */
+
+:root {
+  /* --- brand constants (identical in both themes) --- */
+  --ink:       #12132E;
+  --ink-2:     #1E2046;
+  --paper:     #FFFCF6;
+  --paper-2:   #F4EFE5;
+  --marigold:  #F2A007;
+  --brand:     #2B5CE6;
+  --leaf:      #0F7B5F;
+
+  /* --- the ink band: same ground in light and dark, as on the artwork --- */
+  --band-bg:     #12132E;
+  --band-bg-2:   #1E2046;
+  --band-text:   #FFFCF6;
+  --band-dim:    #9E9BC4;
+  --band-rule:   #2C2E56;
+  --band-accent: #F2A007;
+
+  /* --- themed tokens: light --- */
+  --bg:          #FFFCF6;
+  --surface:     #FFFFFF;
+  --surface-2:   #F4EFE5;
+  --text:        #12132E;
+  --text-dim:    #57567A;
+  --rule:        #DED7C9;
+  --accent:      #F2A007;
+  --accent-text: #8A5A00;   /* marigold darkened until it passes on paper */
+  --accent-ink:  #12132E;   /* text sitting on a marigold fill */
+  --link:        #2B5CE6;
+  --focus:       #2B5CE6;
+  --frame:       #E4DDCE;   /* phone bezel */
+  --good:        #0F7B5F;
+
+  --mk-hot:      var(--accent-text);
+
+  /* --- type --- */
+  --display: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --deva: "Kohinoor Devanagari", "Devanagari Sangam MN", "Noto Sans Devanagari", "Nirmala UI", "Mangal", ui-sans-serif, sans-serif;
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --script:
+    "Kohinoor Devanagari", "Devanagari Sangam MN", "Noto Sans Devanagari",
+    "Kohinoor Bangla", "Bangla Sangam MN", "Noto Sans Bengali", "Vrinda",
+    "Kohinoor Telugu", "Telugu Sangam MN", "Noto Sans Telugu", "Gautami",
+    "Tamil Sangam MN", "Noto Sans Tamil", "Latha",
+    "Kohinoor Gujarati", "Gujarati Sangam MN", "Noto Sans Gujarati", "Shruti",
+    "Kannada Sangam MN", "Noto Sans Kannada", "Tunga",
+    "Malayalam Sangam MN", "Noto Sans Malayalam", "Kartika",
+    "Gurmukhi MN", "Noto Sans Gurmukhi", "Raavi",
+    "Oriya Sangam MN", "Noto Sans Oriya", "Kalinga",
+    "Geeza Pro", "Noto Sans Arabic", "Nirmala UI", "Mangal",
+    ui-sans-serif, sans-serif;
+
+  --step--1: clamp(.80rem, .78rem + .1vw, .86rem);
+  --step-0:  clamp(1rem, .97rem + .15vw, 1.08rem);
+  --step-1:  clamp(1.18rem, 1.1rem + .35vw, 1.4rem);
+  --step-2:  clamp(1.7rem, 1.45rem + 1.1vw, 2.5rem);
+  --step-3:  clamp(2.3rem, 1.8rem + 2.4vw, 3.9rem);
+  --step-4:  clamp(2.8rem, 2rem + 3.6vw, 5rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:          #0C0D1E;
+    --surface:     #161734;
+    --surface-2:   #1E2046;
+    --text:        #F2EFE6;
+    --text-dim:    #A6A3C4;
+    --rule:        #2C2E56;
+    --accent:      #FFB528;
+    --accent-text: #FFB528;
+    --accent-ink:  #12132E;
+    --link:        #93AEFF;
+    --focus:       #93AEFF;
+    --frame:       #2C2E56;
+    --good:        #4FC79F;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:          #0C0D1E;
+  --surface:     #161734;
+  --surface-2:   #1E2046;
+  --text:        #F2EFE6;
+  --text-dim:    #A6A3C4;
+  --rule:        #2C2E56;
+  --accent:      #FFB528;
+  --accent-text: #FFB528;
+  --accent-ink:  #12132E;
+  --link:        #93AEFF;
+  --focus:       #93AEFF;
+  --frame:       #2C2E56;
+  --good:        #4FC79F;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--display);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; }
+audio { display: none; }
+
+a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- shell ---------- */
+
+.wrap {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+
+.band {
+  background: var(--band-bg);
+  color: var(--band-text);
+  --text-dim: var(--band-dim);
+  --rule: var(--band-rule);
+  --accent-text: var(--band-accent);
+  --link: #FFD27F;
+  --focus: #FFD27F;
+  --mk-hot: var(--band-accent);
+}
+
+section { padding-block: clamp(3rem, 6vw, 5.25rem); }
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 .9rem;
+}
+.eyebrow--deva {
+  font-family: var(--deva);
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+h2 {
+  font-size: var(--step-2);
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.12;
+  margin: 0;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+h3 {
+  font-size: var(--step-1);
+  font-weight: 800;
+  letter-spacing: -.015em;
+  line-height: 1.2;
+  margin: 0;
+  text-wrap: balance;
+}
+p { margin: 0; }
+
+.lede {
+  margin-top: 1rem;
+  max-width: 58ch;
+  color: var(--text-dim);
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+
+.stack { display: flex; flex-direction: column; gap: 2.5rem; }
+.stack--tight { gap: 1.25rem; }
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  padding-block: 1.25rem;
+  border-bottom: 1px solid var(--band-rule);
+}
+.lockup {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  text-decoration: none;
+  color: inherit;
+  margin-right: auto;
+}
+.lockup img {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: block;
+}
+.lockup .name {
+  font-weight: 800;
+  font-size: 1.28rem;
+  letter-spacing: -.03em;
+  color: var(--band-accent);
+}
+.lockup .tail {
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--band-dim);
+  letter-spacing: -.01em;
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: .72rem 1.15rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.btn--play {
+  background: var(--marigold);
+  color: var(--ink);
+  border-color: var(--marigold);
+}
+.btn--play:hover { background: #FFB528; border-color: #FFB528; }
+.btn--ghost {
+  background: transparent;
+  color: var(--band-text);
+  border-color: var(--band-rule);
+}
+.btn--ghost:hover { border-color: var(--band-accent); color: var(--band-accent); }
+.btn--sm { padding: .5rem .85rem; font-size: var(--step--1); }
+
+/* ---------- hero ---------- */
+
+.hero {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  padding-block: clamp(2.75rem, 7vw, 5.5rem);
+}
+@media (min-width: 62rem) {
+  .hero { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+}
+
+.hero h1 {
+  margin: 0;
+  font-family: var(--deva);
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.hero h1 em { font-style: normal; color: var(--band-accent); }
+.hero .translit {
+  margin-top: .5rem;
+  font-size: var(--step-1);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  color: var(--band-dim);
+}
+.hero .claim {
+  margin-top: 1.6rem;
+  font-size: var(--step-2);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.15;
+  max-width: 22ch;
+}
+.hero .claim span { display: block; color: var(--band-dim); }
+.hero .gloss {
+  margin-top: 1.1rem;
+  max-width: 48ch;
+  color: var(--band-dim);
+}
+.hero .gloss strong { color: var(--band-text); font-weight: 700; }
+
+.cta {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .9rem 1.25rem;
+}
+.cta .price {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--band-dim);
+  max-width: 32ch;
+  line-height: 1.5;
+}
+
+.hero-mark {
+  display: block;
+  width: 100%;
+  max-width: 21rem;
+  margin-inline: auto;
+  height: auto;
+}
+.hero-mark .rupee {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 30px;
+  fill: var(--ink);
+}
+
+/* ---------- the hear-it control ---------- */
+
+.hear {
+  margin-top: 2.25rem;
+  border-top: 1px solid var(--band-rule);
+  border-bottom: 1px solid var(--band-rule);
+  padding-block: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+.hear-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1rem;
+}
+.hear-row .quote {
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--band-dim);
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+.hear-row[lang="hi"] .quote { font-family: var(--deva); font-weight: 500; }
+.hear-row.is-speaking .quote { color: var(--band-accent); }
+
+.speak {
+  flex: 0 0 auto;
+  background: transparent;
+  color: var(--band-text);
+  border: 1px solid var(--band-rule);
+}
+.speak:hover { border-color: var(--band-accent); }
+.speak .glyph { width: 20px; height: 20px; flex: 0 0 auto; }
+.speak .glyph .w1,
+.speak .glyph .w2 { opacity: .45; }
+.hear-row.is-speaking .speak {
+  border-color: var(--band-accent);
+  color: var(--band-accent);
+}
+.hear-row.is-speaking .speak .glyph .w1 { animation: pulse 1s ease-in-out infinite; }
+.hear-row.is-speaking .speak .glyph .w2 { animation: pulse 1s ease-in-out .28s infinite; }
+@keyframes pulse { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+
+.hear-note {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--band-dim);
+}
+
+/* ---------- the four seconds ---------- */
+
+.scene {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+
+.beats {
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(13.5rem, 100%), 1fr));
+  margin: 0;
+  padding: 0;
+}
+.beat {
+  list-style: none;
+  border-top: 2px solid var(--accent);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.beat .n {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .12em;
+  color: var(--accent-text);
+}
+.beat h3 { font-size: var(--step-0); font-weight: 800; }
+.beat p { color: var(--text-dim); font-size: var(--step--1); line-height: 1.6; }
+.beat .mk { margin: .1rem 0 .2rem; }
+
+/* ---------- marks ---------- */
+
+.mk {
+  display: block;
+  width: 44px;
+  height: 44px;
+  color: inherit;
+}
+.mk--beat { width: 56px; height: 56px; }
+.mk .hot { stroke: var(--mk-hot); }
+.mk .hotf { fill: var(--mk-hot); stroke: none; }
+.mk .solid { fill: currentColor; stroke: none; }
+.mk .soft { opacity: .42; }
+.mk .softer { opacity: .28; }
+
+/* ---------- features ---------- */
+
+.features {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+}
+.f {
+  background: var(--surface);
+  padding: 1.5rem 1.35rem 1.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.f .k {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  margin-top: .35rem;
+}
+.f h3 { font-size: var(--step-0); }
+.f p { color: var(--text-dim); font-size: var(--step--1); line-height: 1.6; }
+.f--sign {
+  background: var(--band-bg);
+  color: var(--band-text);
+  justify-content: center;
+  gap: .35rem;
+}
+.f--sign .tag {
+  font-family: var(--deva);
+  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+}
+.f--sign .tag em { font-style: normal; color: var(--band-accent); }
+.f--sign .translit {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .08em;
+  color: var(--band-dim);
+}
+
+/* ---------- twelve languages ---------- */
+
+.tongues {
+  display: grid;
+  gap: 1px;
+  background: var(--band-rule);
+  border: 1px solid var(--band-rule);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 30rem) { .tongues { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 46rem) { .tongues { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 68rem) { .tongues { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+.tongues li {
+  background: var(--band-bg);
+  list-style: none;
+  padding: 1.15rem .9rem;
+  font-family: var(--script);
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -.005em;
+}
+.tongues { margin: 0; padding: 0; }
+.tongues li:nth-child(3n+1) { color: var(--band-accent); }
+
+/* ---------- gauge ---------- */
+
+.charge {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 52rem) {
+  .charge { grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); }
+}
+.gauge { position: relative; width: 100%; max-width: 22rem; }
+.gauge svg { display: block; width: 100%; height: auto; }
+.gauge-readout {
+  position: absolute;
+  left: 0; right: 0; bottom: 14%;
+  text-align: center;
+  line-height: 1.2;
+}
+.gauge-readout .big {
+  display: block;
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+}
+.gauge-readout .sub {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.states li { list-style: none; display: flex; align-items: center; gap: .45rem; }
+.states .dot { width: .6rem; height: .6rem; border-radius: 50%; flex: 0 0 auto; }
+.states .d1 { background: var(--good); }
+.states .d2 { background: var(--accent); }
+.states .d3 { background: #D2402B; }
+.charge p + p { margin-top: .9rem; }
+.charge .body { color: var(--text-dim); max-width: 56ch; }
+.charge .body strong { color: var(--text); font-weight: 700; }
+
+/* ---------- screenshots ---------- */
+
+.shots {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding: .25rem .25rem 1.25rem;
+  margin-inline: -.25rem;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+}
+.shot {
+  flex: 0 0 auto;
+  width: 210px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+.frame {
+  border: 7px solid var(--frame);
+  border-radius: 16px;
+  background: var(--frame);
+  overflow: hidden;
+  line-height: 0;
+}
+.frame img { display: block; width: 100%; }
+.shot figcaption {
+  font-size: var(--step--1);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.shot b { color: var(--text); font-weight: 700; display: block; }
+.scroll-hint {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ---------- pricing ---------- */
+
+.price-grid {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 52rem) {
+  .price-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+}
+.price-tag {
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--accent);
+  border-radius: 2px;
+  background: var(--surface);
+  padding: 1.75rem 1.5rem;
+}
+.price-tag .amount {
+  font-size: clamp(2.1rem, 1.6rem + 2vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+.price-tag .after {
+  display: block;
+  margin-top: .5rem;
+  color: var(--text-dim);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.price-tag .free {
+  display: block;
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+  color: var(--good);
+  font-weight: 700;
+}
+.terms { margin: 0; padding: 0; display: flex; flex-direction: column; gap: .9rem; }
+.terms li {
+  list-style: none;
+  padding-left: 1.6rem;
+  position: relative;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+.terms li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .62em;
+  width: .75rem;
+  height: 2px;
+  background: var(--accent);
+}
+.terms li strong { color: var(--text); font-weight: 700; }
+
+/* ---------- privacy ---------- */
+
+.privacy h2 { max-width: 26ch; }
+.privacy .body { color: var(--band-dim); max-width: 60ch; }
+.privacy .body strong { color: var(--band-text); font-weight: 700; }
+.privacy .cols {
+  display: grid;
+  gap: 1.75rem 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--band-rule);
+}
+.privacy .cols h3 { font-size: var(--step-0); margin-bottom: .5rem; }
+.privacy .cols p { color: var(--band-dim); font-size: var(--step--1); line-height: 1.6; }
+
+/* ---------- hindi ---------- */
+
+.hindi {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 52rem) {
+  .hindi { grid-template-columns: minmax(0, 1.4fr) minmax(0, 14rem); }
+}
+.hindi .deva-h {
+  font-family: var(--deva);
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -.005em;
+  margin: 0;
+  max-width: 28ch;
+}
+.hindi p.deva-b {
+  font-family: var(--deva);
+  color: var(--text-dim);
+  line-height: 1.85;
+  max-width: 56ch;
+  margin-top: 1.1rem;
+}
+.hindi .btn { font-family: var(--deva); margin-top: 1.6rem; }
+.hindi figure { max-width: 15rem; }
+.hindi figcaption {
+  font-family: var(--deva);
+  font-size: var(--step--1);
+  color: var(--text-dim);
+  margin-top: .7rem;
+  line-height: 1.7;
+}
+
+/* ---------- footer ---------- */
+
+.foot { padding-block: clamp(2.75rem, 6vw, 4.5rem); }
+.foot-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 2rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--band-rule);
+}
+.foot-top .lockup { margin-right: auto; }
+.foot-cols {
+  display: grid;
+  gap: 1.5rem 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  padding-top: 1.75rem;
+}
+.foot-cols h3 {
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--band-dim);
+  margin-bottom: .7rem;
+}
+.foot-cols p, .foot-cols li {
+  color: var(--band-dim);
+  font-size: var(--step--1);
+  line-height: 1.65;
+}
+.foot-cols ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .4rem; }
+.legal {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--band-rule);
+  color: var(--band-dim);
+  font-size: var(--step--1);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+.ph {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: .9em;
+  letter-spacing: .04em;
+  color: var(--band-accent);
+  border: 1px dashed var(--band-accent);
+  border-radius: 2px;
+  padding: 0 .4em;
+}
+
+/* ---------- motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     HERO — ink band
+     ===================================================================== -->
+<div class="band">
+  <div class="wrap">
+
+    <header class="masthead">
+      <a class="lockup" href="#top">
+        <img src="assets/bohni-icon.png" alt="" width="38" height="38">
+        <span>
+          <span class="name">Bohni</span>
+          <span class="tail">UPI Alerts and Bills</span>
+        </span>
+      </a>
+      <a class="btn btn--ghost btn--sm" href="#what-it-does">What it does</a>
+      <a class="btn btn--play btn--sm" href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">Get it on Google Play</a>
+    </header>
+
+    <div class="hero" id="top">
+      <div>
+        <p class="eyebrow">Made for a counter, not a desk</p>
+
+        <h1><span lang="hi">बोहनी हुई <em>क्या?</em></span></h1>
+        <p class="translit">Bohni hui kya?</p>
+
+        <p class="claim">
+          Hear every UPI payment out loud.
+          <span>Bills, khata and GST invoices for your shop.</span>
+        </p>
+
+        <p class="gloss">
+          <strong>Bohni</strong> is the first sale of the day &mdash; the one a shopkeeper counts
+          as luck for the hours after it. The app is named for the moment it exists to announce.
+        </p>
+
+        <!-- the product is a sound, so the page plays it -->
+        <div class="hear">
+          <div class="hear-row" lang="en" data-audio="a-en">
+            <button type="button" class="btn speak" aria-label="Play the spoken announcement in English">
+              <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 9h3.5L13 4.5v15L7.5 15H4z" fill="currentColor" stroke="none"></path>
+                <path class="w1" d="M16.2 9.2a4 4 0 0 1 0 5.6"></path>
+                <path class="w2" d="M19 6.6a7.6 7.6 0 0 1 0 10.8"></path>
+              </svg>
+              <span>Hear it in English</span>
+            </button>
+            <p class="quote">&ldquo;One hundred rupees received, from Ramesh&rdquo;</p>
+          </div>
+
+          <div class="hear-row" lang="hi" data-audio="a-hi">
+            <button type="button" class="btn speak" aria-label="Play the spoken announcement in Hindi">
+              <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 9h3.5L13 4.5v15L7.5 15H4z" fill="currentColor" stroke="none"></path>
+                <path class="w1" d="M16.2 9.2a4 4 0 0 1 0 5.6"></path>
+                <path class="w2" d="M19 6.6a7.6 7.6 0 0 1 0 10.8"></path>
+              </svg>
+              <span lang="en">Hear it in Hindi</span>
+            </button>
+            <p class="quote">&ldquo;रमेश से एक सौ रुपये प्राप्त हुए&rdquo;</p>
+          </div>
+
+          <p class="hear-note">The app&rsquo;s own example sentences. Nothing plays until you press it.</p>
+          <p class="hear-note" role="status" aria-live="polite" id="hear-status"></p>
+        </div>
+
+        <div class="cta">
+          <a class="btn btn--play" href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">Get it on Google Play</a>
+          <p class="price">First 6 months free for every new shop, then &#8377;29 a month. Recording payments and exporting them are free, always.</p>
+        </div>
+      </div>
+
+      <!-- the launcher mark, redrawn from playstore/feature-graphic.html mark() -->
+      <svg class="hero-mark" viewBox="-54 -48 108 96" role="img" aria-labelledby="mark-title">
+        <title id="mark-title">The Bohni mark: a soundbox speaker carrying a rupee sign, with three sound waves leaving it</title>
+        <g fill="#FFFCF6">
+          <rect x="-46" y="-20" width="22" height="40" rx="5"></rect>
+          <path d="M-26 -18 L-2 -38 Q4 -40 4 -34 L4 34 Q4 40 -2 38 L-26 18 Z"></path>
+        </g>
+        <text class="rupee" x="-11" y="1" text-anchor="middle" dominant-baseline="central">&#8377;</text>
+        <g fill="none" stroke="#FFFCF6" stroke-width="5" stroke-linecap="round">
+          <path d="M23.02 -9.30 A16 16 0 0 1 23.02 9.30"></path>
+          <path d="M34.42 -17.43 A30 30 0 0 1 34.42 17.43" opacity=".62"></path>
+          <path d="M45.81 -25.56 A44 44 0 0 1 45.81 25.56" stroke="#F2A007"></path>
+        </g>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<!-- =====================================================================
+     THE FOUR SECONDS AT THE COUNTER
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack">
+    <div>
+      <p class="eyebrow">The four seconds at the counter</p>
+      <h2>A shopkeeper cannot watch a screen and serve a customer at the same time.</h2>
+      <p class="lede">
+        That is the whole problem. Everything the app does follows from it &mdash; and from the
+        fact that a counter is loud, hands are busy, and the person paying is already walking away.
+      </p>
+    </div>
+
+    <img class="scene" src="assets/counter-scene.png" width="1024" height="500" loading="lazy"
+         alt="Illustration of a shopkeeper standing behind his counter with one hand raised in greeting, a soundbox beside him giving off sound waves, and a string of marigolds hung above. The Hindi words बोहनी हो गई! are set to the left.">
+
+    <ol class="beats">
+      <li class="beat">
+        <span class="n">01</span>
+        <svg class="mk mk--beat" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="14" y="12" width="28" height="28" rx="2"></rect>
+          <rect x="18" y="16" width="7" height="7"></rect>
+          <rect x="31" y="16" width="7" height="7"></rect>
+          <rect x="18" y="29" width="7" height="7"></rect>
+          <rect class="solid" x="31" y="29" width="3" height="3"></rect>
+          <rect class="solid" x="36" y="33" width="3" height="3"></rect>
+          <rect class="solid" x="31" y="36" width="3" height="3"></rect>
+          <path class="hot" d="M10 26 H46" stroke-width="2.4"></path>
+        </svg>
+        <h3>The customer scans</h3>
+        <p>Money lands in the bank. The phone is in a drawer, or face-down beside the weighing
+        scale, or charging on a nail in the wall.</p>
+      </li>
+
+      <li class="beat">
+        <span class="n">02</span>
+        <svg class="mk mk--beat" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 46 H52"></path>
+          <rect x="15" y="41" width="13" height="4" rx="1.4"></rect>
+          <path d="M12.5 36.9 A9 9 0 0 1 29.5 36.9"></path>
+          <path d="M6.9 34.9 A15 15 0 0 1 35.1 34.9" opacity=".55"></path>
+          <path class="hot" d="M2.2 33.2 A20 20 0 0 1 39.8 33.2" stroke-width="2.2"></path>
+        </svg>
+        <h3>The shop hears it</h3>
+        <p><span lang="hi">&ldquo;रमेश से एक सौ रुपये प्राप्त हुए।&rdquo;</span> Loud enough to
+        carry over a fan and a road. The shopkeeper never looks up.</p>
+      </li>
+
+      <li class="beat">
+        <span class="n">03</span>
+        <svg class="mk mk--beat" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path class="hot" d="M28 4 V13" stroke-width="2.2"></path>
+          <path class="hot" d="M24 9 l4 4 l4 -4" stroke-width="2.2"></path>
+          <rect x="10" y="16" width="36" height="32" rx="2"></rect>
+          <path class="hot" d="M16 26 H40" stroke-width="3"></path>
+          <path class="soft" d="M16 34 H40"></path>
+          <path class="soft" d="M16 42 H34"></path>
+        </svg>
+        <h3>It is written down</h3>
+        <p>Amount, who paid, reference. Into a ledger you can scroll back through, export, or turn
+        into a bill &mdash; without typing any of it.</p>
+      </li>
+
+      <li class="beat">
+        <span class="n">04</span>
+        <svg class="mk mk--beat" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="17" cy="19" r="5"></circle>
+          <path d="M9 38 c0-6.5 4-10 8-10 s8 3.5 8 10"></path>
+          <circle class="hot" cx="39" cy="22" r="4.2"></circle>
+          <path class="hot" d="M32 38 c0-5.5 3.2-8.5 7-8.5 s7 3 7 8.5"></path>
+          <path d="M4 40 H52"></path>
+          <path class="soft" d="M8 44 H48 M8 48 H48"></path>
+        </svg>
+        <h3>The next customer is already there</h3>
+        <p>Which is the point. The app has finished with the last payment before you have.</p>
+      </li>
+    </ol>
+  </section>
+</div>
+
+<!-- =====================================================================
+     FEATURES — in the order a merchant meets them
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack" id="what-it-does">
+    <div>
+      <p class="eyebrow">What it does</p>
+      <h2>Features, in the order a merchant meets them.</h2>
+    </div>
+
+    <div class="features">
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect class="solid" x="4" y="18" width="7" height="12" rx="2"></rect>
+          <path class="solid" d="M11 19 L20 12 Q22 11 22 14 L22 34 Q22 37 20 36 L11 29 Z"></path>
+          <path d="M27.7 20 A7 7 0 0 1 27.7 28"></path>
+          <path d="M31.8 17.1 A12 12 0 0 1 31.8 30.9" opacity=".55"></path>
+          <path class="hot" d="M35.9 14.2 A17 17 0 0 1 35.9 33.8" stroke-width="2.1"></path>
+        </svg>
+        <span class="k">Soundbox</span>
+        <h3>Every payment announced out loud</h3>
+        <p>&ldquo;One hundred rupees received, from Ramesh.&rdquo; Loud enough to hear across a
+        counter, in English, Hindi and ten more Indian languages &mdash; the spoken language set
+        separately from the app&rsquo;s own.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="8" y="8" width="32" height="32" rx="2"></rect>
+          <path d="M14 8 V40"></path>
+          <path class="hot" d="M19 17 H34" stroke-width="2.6"></path>
+          <path class="soft" d="M19 24 H34"></path>
+          <path class="softer" d="M19 31 H30"></path>
+        </svg>
+        <span class="k">Khata</span>
+        <h3>The ledger keeps itself</h3>
+        <p>Read from the notifications UPI and bank apps already show, and from bank alert SMS if
+        you allow it. Amount, who paid, reference, time. Nothing typed.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="11" width="28" height="17" rx="2"></rect>
+          <circle cx="19" cy="19.5" r="4"></circle>
+          <path class="soft" d="M9 15 V24 M29 15 V24"></path>
+          <path class="hot" d="M38 31 V41 M33 36 H43" stroke-width="2.4"></path>
+        </svg>
+        <span class="k">Cash</span>
+        <h3>Add a cash sale in two taps</h3>
+        <p>A shop&rsquo;s takings are not only UPI. And any row can be corrected or deleted
+        &mdash; a misread amount included.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 7 H36 V37 l-4 -3 l-4 3 l-4 -3 l-4 3 l-4 -3 l-4 3 Z"></path>
+          <path d="M17 15 H31"></path>
+          <path class="soft" d="M17 21 H31"></path>
+          <path class="hot" d="M17 27 H31" stroke-width="2.6"></path>
+        </svg>
+        <span class="k">Bills</span>
+        <h3>Receipts and GST invoices</h3>
+        <p>Made in seconds and shared as a PDF on WhatsApp. A simple bill if you are not
+        registered, a tax invoice if you are &mdash; with the shop&rsquo;s name, the number and
+        the exact time on every one.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 20 a3 3 0 0 1 5.6 0 a3 3 0 0 1 5.6 0 a3 3 0 0 1 5.6 0"></path>
+          <path d="M5 21 V38 H20 V21"></path>
+          <path class="hot" d="M25 10 V38" stroke-width="2"></path>
+          <circle cx="36" cy="19" r="4.2"></circle>
+          <path d="M29 38 c0-5.5 3.2-8.5 7-8.5 s7 3 7 8.5"></path>
+        </svg>
+        <span class="k">Two ways to use it</span>
+        <h3>Shop, or your own money</h3>
+        <p><strong>Tracking your own money is free, always.</strong> There is nothing to buy and
+        nothing that expires. Say which you are on the first screen and change it in Settings
+        whenever &mdash; a shop gets announcements and bills, and pays &#8377;29 a month after the
+        first six months.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 38 H40"></path>
+          <rect x="11" y="26" width="6" height="12"></rect>
+          <rect class="hot" x="21" y="17" width="6" height="21" stroke-width="2.2"></rect>
+          <rect x="31" y="23" width="6" height="15" class="soft"></rect>
+          <path class="softer" d="M8 10 H40"></path>
+        </svg>
+        <span class="k">Insight</span>
+        <h3>Takings, customers, UPI charges</h3>
+        <p>What came in this week, who your best customers are, and how close you are to the point
+        where UPI stops being free for your shop.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 7 H24 L30 13 V39 H8 Z"></path>
+          <path d="M24 7 V13 H30"></path>
+          <path class="soft" d="M13 22 H25 M13 28 H25 M13 34 H21"></path>
+          <path class="hot" d="M34 17 H45 M41 13 l4 4 l-4 4" stroke-width="2.2"></path>
+        </svg>
+        <span class="k">Yours to take</span>
+        <h3>Export to Excel or CSV</h3>
+        <p>Your whole ledger, or a full backup file, whenever you like and free in every case
+        &mdash; including after the trial ends. Your records are never held hostage.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 7 H24 L30 13 V39 H8 Z"></path>
+          <path d="M24 7 V13 H30"></path>
+          <path class="soft" d="M13 22 H25 M13 28 H25 M13 34 H21"></path>
+          <path class="hot" d="M45 17 H34 M38 13 l-4 4 l4 4" stroke-width="2.2"></path>
+        </svg>
+        <span class="k">Yours to bring</span>
+        <h3>Import what you already have</h3>
+        <p>A backup from your old phone, or a plain spreadsheet you kept yourself. Excel and CSV
+        both, in and out, so nothing is trapped in here.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="14" y="8" width="20" height="32" rx="3"></rect>
+          <path d="M19 19 H29"></path>
+          <path class="soft" d="M19 25 H29"></path>
+          <path class="softer" d="M19 31 H26"></path>
+          <path class="hot" d="M6 12 V6 H12 M36 6 H42 V12 M42 36 V42 H36 M12 42 H6 V36" stroke-width="2.2"></path>
+        </svg>
+        <span class="k">On this phone</span>
+        <h3>Stored only on this phone</h3>
+        <p>Your payments are read on this phone and stored only on this phone &mdash;
+        <strong>not even to Google backup.</strong> No account, no server, nothing to log in to.
+        No amount, sender or notification text is ever uploaded, shared or sold.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 34 A14 14 0 0 1 38 34" stroke-width="2.6" opacity=".45"></path>
+          <path class="hot" d="M10 34 A14 14 0 0 1 32.2 22.7" stroke-width="2.6"></path>
+          <path d="M24 34 V30"></path>
+          <path class="soft" d="M8 39 H40"></path>
+        </svg>
+        <span class="k">UPI charges</span>
+        <h3>Know before UPI starts costing you</h3>
+        <p>Bohni adds every payment up as it arrives and warns you at four-fifths of the monthly
+        limit &mdash; in time to take the rest of the month in cash, rather than finding out from
+        your bank three months later.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4" y="8" width="9" height="9" rx="2.4"></rect>
+          <rect x="4" y="19.5" width="9" height="9" rx="2.4"></rect>
+          <rect x="4" y="31" width="9" height="9" rx="2.4"></rect>
+          <path class="soft" d="M15 12.5 H19 q3 0 3 3 V21 M15 35.5 H19 q3 0 3 -3 V27"></path>
+          <path class="hot" d="M15 24 H25 M22 21 l3 3 l-3 3" stroke-width="2.1"></path>
+          <rect x="29" y="10" width="15" height="28" rx="2"></rect>
+          <path class="soft" d="M33 19 H40 M33 25 H40 M33 31 H38"></path>
+        </svg>
+        <span class="k">One ledger</span>
+        <h3>Every UPI app in the same book</h3>
+        <p>It does not matter which app the money moved through, or whether you paid or were paid.
+        Each one lands in the same ledger, in order, added up &mdash; so the total is the whole
+        picture and not one app&rsquo;s share of it.</p>
+      </article>
+
+      <article class="f f--sign">
+        <span class="tag" lang="hi">बोहनी हुई <em>क्या?</em></span>
+        <span class="translit">Bohni hui kya?</span>
+      </article>
+
+    </div>
+  </section>
+</div>
+
+<!-- =====================================================================
+     TWELVE LANGUAGES — ink band
+     ===================================================================== -->
+<div class="band">
+  <div class="wrap">
+    <section class="stack">
+      <div>
+        <p class="eyebrow">Twelve languages</p>
+        <h2>Be paid in the language you count in.</h2>
+        <p class="lede">
+          The app&rsquo;s screens stay in the language you chose for them. This only changes what
+          is said out loud.
+        </p>
+      </div>
+
+      <ul class="tongues">
+        <li lang="en">English</li>
+        <li lang="hi">हिंदी</li>
+        <li lang="bn">বাংলা</li>
+        <li lang="mr">मराठी</li>
+        <li lang="te">తెలుగు</li>
+        <li lang="ta">தமிழ்</li>
+        <li lang="gu">ગુજરાતી</li>
+        <li lang="kn">ಕನ್ನಡ</li>
+        <li lang="ml">മലയാളം</li>
+        <li lang="pa">ਪੰਜਾਬੀ</li>
+        <li lang="or">ଓଡ଼ିଆ</li>
+        <li lang="ur" dir="rtl">اردو</li>
+      </ul>
+
+      <p class="hear-note">
+        The voice comes from the speech engine already on the phone. The sentence is built and
+        spoken on the device; nothing is sent anywhere to say it.
+      </p>
+    </section>
+  </div>
+</div>
+
+<!-- =====================================================================
+     UPI CHARGES — the gauge
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack">
+    <div>
+      <p class="eyebrow">UPI charges</p>
+      <h2>The number that decides whether UPI is free for your shop.</h2>
+    </div>
+
+    <div class="charge">
+      <figure class="gauge" style="margin:0">
+        <svg viewBox="0 0 320 186" aria-hidden="true">
+          <path d="M40 150 A120 120 0 0 1 280 150" fill="none" stroke="var(--rule)" stroke-width="20" stroke-linecap="round"></path>
+          <path d="M40 150 A120 120 0 0 1 238.2 59.0" fill="none" stroke="var(--accent)" stroke-width="20" stroke-linecap="round"></path>
+        </svg>
+        <figcaption class="gauge-readout">
+          <span class="big">&#8377;72,635</span>
+          <span class="sub">of &#8377;1,00,000 this month</span>
+        </figcaption>
+      </figure>
+
+      <div>
+        <p class="body">
+          From <strong>15 October 2026</strong> a small merchant keeps zero MDR only while money in
+          stays at or under <strong>&#8377;1,00,000 a month</strong>, and a bank only reclassifies
+          after three consecutive months over. So the month that costs you is the third one, and by
+          then it is too late to do anything about it.
+        </p>
+        <p class="body">
+          Bohni counts the month as it happens and tells you where you stand, in time to take the
+          rest of the month in cash if you want to.
+        </p>
+        <p class="body">
+          Your category is your <em>bank&rsquo;s</em> classification and no app can read it, so
+          Bohni works from what you tell it and says so on the screen.
+        </p>
+        <ul class="states" style="margin-top:1.4rem">
+          <li><span class="dot d1"></span>Comfortable</li>
+          <li><span class="dot d2"></span>Getting close</li>
+          <li><span class="dot d3"></span>Over the limit</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- =====================================================================
+     SCREENSHOTS
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack">
+    <div>
+      <p class="eyebrow">On the phone</p>
+      <h2>What it looks like at the counter.</h2>
+      <p class="lede">
+        Real screens, filled with a made-up shop&rsquo;s fortnight. No real person, amount or
+        reference number appears in any of them.
+      </p>
+    </div>
+
+    <div class="shots">
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <img src="assets/screen-ledger-week.png" width="540" height="1200" loading="lazy"
+               alt="The Finance tab showing a net of 21,090 rupees for the last 7 days, 35,840 received against 14,750 spent, and a list of payments from PhonePe, Google Pay and bank SMS.">
+        </div>
+        <figcaption><b>A week&rsquo;s takings</b>Received against spent, with the app each payment came from.</figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <img src="assets/screen-bill-pdf.png" width="540" height="1200" loading="lazy"
+               alt="A finished receipt PDF for Sharma General Store listing two items with quantity, rate and amount, a total of 168 rupees, the amount in words, and a Send this bill button.">
+        </div>
+        <figcaption><b>A finished bill</b>Shop name, number, date and time, total in words. Shared as a PDF.</figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <img src="assets/screen-languages.png" width="540" height="1200" loading="lazy"
+               alt="The Choose announcement language dialog, listing English, हिंदी, বাংলা, मराठी, తెలుగు, தமிழ், ગુજરાતી and ಕನ್ನಡ with radio buttons.">
+        </div>
+        <figcaption><b>Twelve spoken languages</b>Set apart from the language the app&rsquo;s screens are in.</figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <img src="assets/screen-upi-charges.png" width="540" height="1200" loading="lazy"
+               alt="The Insights tab showing top customers, where money went, and a UPI charges meter reading 72,635 rupees of 1,00,000 with the line Comfortably under the limit, so UPI stays free for you.">
+        </div>
+        <figcaption><b>UPI charges, live</b>Where the month stands against the limit, and who paid you most.</figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <img src="assets/screen-choose-mode.png" width="540" height="1200" loading="lazy"
+               alt="The first screen, asking How will you use Bohni? with two choices: I run a business, and I am tracking my own money, each listing what it gets.">
+        </div>
+        <figcaption><b>The first screen</b>Shop or personal, each with what it gets. Changeable later.</figcaption>
+      </figure>
+    </div>
+
+    <p class="scroll-hint">Scroll sideways for more &rarr;</p>
+  </section>
+</div>
+
+<!-- =====================================================================
+     PRICING
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack">
+    <div>
+      <p class="eyebrow">What it costs</p>
+      <h2>First 6 months free. Then &#8377;29 a month.</h2>
+    </div>
+
+    <div class="price-grid">
+      <div class="price-tag">
+        <span class="amount">&#8377;29</span>
+        <span class="after">a month, after the first six months</span>
+        <span class="free">Recording your payments is free and stays free.</span>
+      </div>
+
+      <ul class="terms">
+        <li><strong>First 6 months free for every new shop</strong> &mdash; no card, no payment details,
+        nothing entered up front.</li>
+        <li>Then <strong>&#8377;29 a month</strong>, or a plan billed every three months, every
+        six months or once a year at a lower monthly rate.</li>
+        <li>Every plan is a <strong>Google Play subscription</strong>: pay by UPI or card, it renews
+        on its own, and you can <strong>cancel any time in Google Play</strong>.</li>
+        <li><strong>Tracking your own money rather than running a shop? Free forever.</strong>
+        There is nothing to buy.</li>
+        <li>Whatever you pay, your payments keep being recorded and <strong>export stays
+        free</strong>. Your records are never held hostage.</li>
+        <li><strong>No ads.</strong> The app shows none and asks for no advertising identifier.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<!-- =====================================================================
+     PRIVACY — ink band
+     ===================================================================== -->
+<div class="band">
+  <div class="wrap">
+    <section class="privacy">
+      <p class="eyebrow">Your money, your phone</p>
+      <h2>Payments are read on this phone and stored only on this phone &mdash; not even to Google backup.</h2>
+      <p class="lede">
+        There is no account and nothing to log in to. No amount, no customer name and no message
+        content is ever uploaded, shared or sold.
+      </p>
+
+      <div class="cols">
+        <div>
+          <h3>One-time passwords are thrown away</h3>
+          <p>OTPs and security codes are detected and rejected before anything is saved &mdash;
+          never stored, never shown in your records, never read aloud. Every notification that is
+          not a payment is discarded immediately.</p>
+        </div>
+        <div>
+          <h3>Bank SMS is optional</h3>
+          <p>The app can receive new bank alerts so card and ATM payments reach your ledger too.
+          Refuse it and the app still works; it simply records fewer payments, and tells you so.
+          It cannot open your message history.</p>
+        </div>
+        <div>
+          <h3>What does leave the phone</h3>
+          <p>Two things, neither containing payment information: crash reports, so a fault can be
+          fixed, and anonymous counts of which screens are opened. Both can be switched off in
+          Settings &rarr; Data &amp; privacy, which stops the collection itself.</p>
+        </div>
+        <div>
+          <h3>Read it in full</h3>
+          <p>The privacy policy and terms set out exactly what is stored, what is not, and what
+          you should not rely on the app for.</p>
+          <p style="margin-top:.6rem"><a href="https://mauryaabhishek33.github.io/bohni-privacy/">Privacy policy and terms &rarr;</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- =====================================================================
+     HINDI — wholly Hindi, no code-switching
+     ===================================================================== -->
+<div class="wrap">
+  <section lang="hi">
+    <p class="eyebrow eyebrow--deva">हिन्दी में</p>
+    <div class="hindi">
+      <div>
+        <p class="deva-h">आपका फ़ोन दराज़ में हो या दीवार पर चार्ज हो रहा हो &mdash; बोहनी हर UPI पेमेंट बोलकर सुना देता है।</p>
+        <p class="deva-b">आपके पेमेंट इसी फ़ोन में पढ़े और इसी फ़ोन में रखे जाते हैं। कोई रकम, भेजने वाला या नोटिफिकेशन का मजमून कभी अपलोड, साझा या बेचा नहीं जाता &mdash; Google बैकअप में भी नहीं। कोई अकाउंट नहीं है, और लॉगिन करने को कुछ नहीं।</p>
+        <p class="deva-b">पहले 6 महीने मुफ़्त। फिर &#8377;29 महीना, या हर 3, 6 या 12 महीने की Google Play सब्सक्रिप्शन — अपने आप रिन्यू होती है, Google Play में कभी भी बंद करें। पेमेंट दर्ज होना और एक्सपोर्ट हमेशा मुफ़्त है।</p>
+        <a class="btn btn--play" href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">Google Play पर पाएँ</a>
+      </div>
+
+      <figure style="margin:0">
+        <div class="frame">
+          <img src="assets/screen-ledger-hindi.png" width="540" height="1200" loading="lazy"
+               alt="बोहनी की हिंदी स्क्रीन: आज का बाक़ी ₹445, मिले ₹6,495, दिए ₹6,050, और नीचे दिन के पेमेंट की सूची।">
+        </div>
+        <figcaption>ऐप की स्क्रीन हिंदी में &mdash; दिन का पूरा हिसाब एक जगह।</figcaption>
+      </figure>
+    </div>
+  </section>
+</div>
+
+<!-- =====================================================================
+     FOOTER — ink band
+     ===================================================================== -->
+<div class="band">
+  <div class="wrap">
+    <footer class="foot">
+      <div class="foot-top">
+        <span class="lockup">
+          <img src="assets/bohni-icon.png" alt="The Bohni app icon" width="38" height="38">
+          <span>
+            <span class="name">Bohni</span>
+            <span class="tail">UPI Alerts and Bills</span>
+          </span>
+        </span>
+        <a class="btn btn--play" href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">Get it on Google Play</a>
+      </div>
+
+      <div class="foot-cols">
+        <div>
+          <h3>The app</h3>
+          <ul>
+            <li><a href="#what-it-does">What it does</a></li>
+            <li><a href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">Google Play listing</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="https://mauryaabhishek33.github.io/bohni-privacy/">Privacy policy</a></li>
+            <li><a href="https://mauryaabhishek33.github.io/bohni-privacy/#terms">Terms of service</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Support</h3>
+          <ul>
+            <li><a href="mailto:supportsubtracker@gmail.com">supportsubtracker@gmail.com</a></li>
+          </ul>
+          <p style="margin-top:.5rem">Your records sit on your phone and on no server we can
+          reach, so we cannot look them up or recover them for you &mdash; those controls are all
+          inside the app.</p>
+        </div>
+      </div>
+
+      <p class="legal">
+        Bohni is a record-keeping and notification tool. <strong>It is not a payment
+        application</strong>: it cannot send, receive, hold or move money, and it is not affiliated
+        with NPCI, UPI, Google Pay, PhonePe, Paytm, Amazon Pay, or any bank. It reads notifications
+        written by other companies, whose wording changes without notice, so it may occasionally
+        miss a payment or read a detail wrongly &mdash; confirm the payment in your bank or UPI app
+        before handing over goods.
+        <br><br>
+        &copy; 2026 <a href="https://nejendigital.com/" rel="noopener">Nejendigital</a>. All rights reserved.
+      </p>
+    </footer>
+  </div>
+</div>
+
+<audio id="a-en" src="assets/announcement-en.m4a" preload="none"></audio>
+<audio id="a-hi" src="assets/announcement-hi.m4a" preload="none"></audio>
+
+<script>
+(function () {
+  "use strict";
+
+  var rows = Array.prototype.slice.call(document.querySelectorAll(".hear-row"));
+  var status = document.getElementById("hear-status");
+  var playing = null;
+
+  function clear() {
+    rows.forEach(function (r) { r.classList.remove("is-speaking"); });
+    if (status) { status.textContent = ""; }
+  }
+
+  rows.forEach(function (row) {
+    var audio = document.getElementById(row.getAttribute("data-audio"));
+    var button = row.querySelector("button");
+    if (!audio || !button) { return; }
+
+    // Both handlers must check that this clip is still the current one. Starting the
+    // Hindi clip pauses the English one, and that pause event fires *after* the Hindi
+    // row has already been marked as speaking — an unguarded clear() would wipe it.
+    audio.addEventListener("ended", function () {
+      if (playing === audio) { clear(); playing = null; }
+    });
+    audio.addEventListener("pause", function () {
+      if (playing === audio && audio.currentTime === 0) { clear(); playing = null; }
+    });
+
+    button.addEventListener("click", function () {
+      // stop whatever is already speaking, so two never overlap
+      if (playing && playing !== audio) {
+        playing.pause();
+        playing.currentTime = 0;
+      }
+      clear();
+
+      if (playing === audio && !audio.paused) {
+        audio.pause();
+        audio.currentTime = 0;
+        playing = null;
+        return;
+      }
+
+      audio.currentTime = 0;
+      var started = audio.play();
+      playing = audio;
+      row.classList.add("is-speaking");
+      if (status) { status.textContent = "Speaking…"; }
+
+      if (started && typeof started.catch === "function") {
+        started.catch(function () {
+          // autoplay policy or a missing codec: fail quietly, the caption is on screen
+          clear();
+          playing = null;
+        });
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
