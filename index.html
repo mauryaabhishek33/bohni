@@ -333,18 +333,22 @@ p { margin: 0; }
   line-height: 1.5;
 }
 
+.tut-line {
+  margin-top: 1rem;
+  font-size: var(--step--1);
+  color: var(--text-dim);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.tut-line a { color: var(--accent-text); }
+
 .hero-mark {
   display: block;
   width: 100%;
-  max-width: 21rem;
+  max-width: 17rem;
   margin-inline: auto;
   height: auto;
-}
-.hero-mark .rupee {
-  font-family: var(--display);
-  font-weight: 800;
-  font-size: 30px;
-  fill: var(--ink);
 }
 
 /* ---------- the hear-it control ---------- */
@@ -601,6 +605,10 @@ p { margin: 0; }
   line-height: 0;
 }
 .frame img { display: block; width: 100%; }
+.frame video { display: block; width: 100%; height: auto; background: var(--surface-2); }
+/* the loop strip: .shots, but wide enough to read the screen inside it */
+.shots--demo .shot { width: min(74vw, 268px); }
+.loop { cursor: pointer; }
 .shot figcaption {
   font-size: var(--step--1);
   color: var(--text-dim);
@@ -614,67 +622,6 @@ p { margin: 0; }
   text-transform: uppercase;
   color: var(--text-dim);
 }
-
-/* ---------- pricing ---------- */
-
-.price-grid {
-  display: grid;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-}
-@media (min-width: 52rem) {
-  .price-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
-}
-.price-tag {
-  border: 1px solid var(--rule);
-  border-top: 3px solid var(--accent);
-  border-radius: 2px;
-  background: var(--surface);
-  padding: 1.75rem 1.5rem;
-}
-.price-tag .amount {
-  font-size: clamp(2.1rem, 1.6rem + 2vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -.035em;
-  line-height: 1.05;
-  display: block;
-  font-variant-numeric: tabular-nums;
-}
-.price-tag .after {
-  display: block;
-  margin-top: .5rem;
-  color: var(--text-dim);
-  font-size: var(--step-1);
-  font-weight: 600;
-  letter-spacing: -.01em;
-}
-.price-tag .free {
-  display: block;
-  margin-top: 1.1rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid var(--rule);
-  color: var(--good);
-  font-weight: 700;
-}
-.terms { margin: 0; padding: 0; display: flex; flex-direction: column; gap: .9rem; }
-.terms li {
-  list-style: none;
-  padding-left: 1.6rem;
-  position: relative;
-  color: var(--text-dim);
-  line-height: 1.55;
-}
-.terms li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: .62em;
-  width: .75rem;
-  height: 2px;
-  background: var(--accent);
-}
-.terms li strong { color: var(--text); font-weight: 700; }
 
 /* ---------- privacy ---------- */
 
@@ -741,6 +688,18 @@ p { margin: 0; }
   border-bottom: 1px solid var(--band-rule);
 }
 .foot-top .lockup { margin-right: auto; }
+
+/* The Play Store QR.
+   Shown only from 48rem up, and that is the whole point of it: it exists for a
+   reader on a desktop who wants the app on their phone. On a phone it is dead
+   weight -- you cannot scan the screen you are holding -- and the button beside
+   it already does the job. The image carries its own cream card and ink ground,
+   which is the --band-bg this footer sits on, so it needs no frame. */
+.foot-qr { display: none; }
+@media (min-width: 48rem) {
+  .foot-qr { display: block; flex: 0 0 auto; line-height: 0; }
+  .foot-qr img { width: 124px; height: 124px; }
+}
 .foot-cols {
   display: grid;
   gap: 1.5rem 2.5rem;
@@ -831,6 +790,15 @@ p { margin: 0; }
           as luck for the hours after it. The app is named for the moment it exists to announce.
         </p>
 
+        <!-- Straight after the heading, because someone who has just understood what the app
+             is called is exactly the person who wants to watch it work. -->
+        <p class="tut-line">
+          Watch the full tutorial:
+          <a href="https://youtu.be/vuWh_MvNK_g" lang="hi">हिंदी में</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href="https://youtu.be/zqsaVjRVALQ">in English</a>
+        </p>
+
         <!-- the product is a sound, so the page plays it -->
         <div class="hear">
           <div class="hear-row" lang="en" data-audio="a-en">
@@ -868,22 +836,102 @@ p { margin: 0; }
       </div>
 
       <!-- the launcher mark, redrawn from playstore/feature-graphic.html mark() -->
-      <svg class="hero-mark" viewBox="-54 -48 108 96" role="img" aria-labelledby="mark-title">
-        <title id="mark-title">The Bohni mark: a soundbox speaker carrying a rupee sign, with three sound waves leaving it</title>
-        <g fill="#FFFCF6">
-          <rect x="-46" y="-20" width="22" height="40" rx="5"></rect>
-          <path d="M-26 -18 L-2 -38 Q4 -40 4 -34 L4 34 Q4 40 -2 38 L-26 18 Z"></path>
-        </g>
-        <text class="rupee" x="-11" y="1" text-anchor="middle" dominant-baseline="central">&#8377;</text>
-        <g fill="none" stroke="#FFFCF6" stroke-width="5" stroke-linecap="round">
-          <path d="M23.02 -9.30 A16 16 0 0 1 23.02 9.30"></path>
-          <path d="M34.42 -17.43 A30 30 0 0 1 34.42 17.43" opacity=".62"></path>
-          <path d="M45.81 -25.56 A44 44 0 0 1 45.81 25.56" stroke="#F2A007"></path>
+      <!-- The Galla mark, traced from app/src/main/res/drawable/ic_launcher_foreground.xml:
+           the first coin of the day dropping into the cash drawer. This replaces the old
+           soundbox-speaker mark, which the app stopped using on 23 Sep 2026 and which no
+           longer matched either the launcher icon or the lockup in this page's own header.
+           The slot and the rupee are cut as holes (evenodd) exactly as in the app, so the
+           mark stays correct if it is ever inverted. -->
+      <svg class="hero-mark" viewBox="22 14 64 74" role="img" aria-labelledby="mark-title">
+        <title id="mark-title">The Bohni mark: the first coin of the day dropping into the cash drawer</title>
+        <path fill="#FFFCF6" fill-rule="evenodd" d="M33,56 H75 A6,6 0 0 1 81,62 V76 A6,6 0 0 1 75,82 H33 A6,6 0 0 1 27,76 V62 A6,6 0 0 1 33,56 Z M47.5,66 H60.5 A2.5,2.5 0 0 1 63,68.5 A2.5,2.5 0 0 1 60.5,71 H47.5 A2.5,2.5 0 0 1 45,68.5 A2.5,2.5 0 0 1 47.5,66 Z"></path>
+        <path fill="var(--band-accent)" fill-rule="evenodd" d="M43,40 A11,11 0 1 1 65,40 A11,11 0 1 1 43,40 Z M52.1,33.5 L57.1,33.5 L57.1,35.25 L55.4,35.25 A2.8,2.8 0 0 1 55.8,36.5 L57.1,36.5 L57.1,38.25 L55.8,38.25 A3.2,3.2 0 0 1 52.9,40.8 L57.1,45.4 L57.1,46.5 L55.2,46.5 L50.9,41.7 L50.9,39.8 L52.4,39.8 A1.7,1.7 0 0 0 54,38.25 L50.9,38.25 L50.9,36.5 L54,36.5 A1.7,1.7 0 0 0 52.4,35.25 L50.9,35.25 L50.9,33.5 Z"></path>
+        <g fill="none" stroke="var(--band-accent)" stroke-width="3.5" stroke-linecap="round">
+          <path d="M39,31 L35,26"></path>
+          <path d="M69,31 L73,26"></path>
+          <path d="M54,25 L54,20"></path>
         </g>
       </svg>
     </div>
 
   </div>
+</div>
+
+<!-- =====================================================================
+     SEE IT WORK — three loops cut from one screen recording
+
+     Video, not GIF: the same clips as GIFs are 1.3-3.1 MB each against
+     273-535 KB here, and nothing that can render this page would ever fetch
+     them. The poster is a quantised PNG8 (47-82 KB, the size of the other
+     screenshots) and doubles as the fallback inside <video>, so it costs no
+     extra bytes. Nothing but the posters loads until a clip is scrolled to.
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack">
+    <div>
+      <p class="eyebrow">See it work</p>
+      <h2>Not a mock-up. The app, on a phone, in real time.</h2>
+      <p class="lede">
+        Three clips out of one unbroken screen recording &mdash; a payment arriving on its own,
+        a bill going out as a PDF, and every screen changing language. The captions are burnt
+        in, so none of it needs sound.
+      </p>
+    </div>
+
+    <div class="shots shots--demo">
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <video class="loop" width="540" height="1200" muted loop playsinline preload="none"
+                 poster="assets/loop-payment.png">
+            <source src="assets/loop-payment.webm" type="video/webm">
+            <source src="assets/loop-payment.mp4" type="video/mp4">
+            <img src="assets/loop-payment.png" width="540" height="1200"
+                 alt="A bank alert slides in at the top of the phone reading that one rupee has been credited. Behind it the Finance tab already shows the payment: the payer&rsquo;s name, the time, Google Pay, and plus one rupee.">
+          </video>
+        </div>
+        <figcaption>
+          <b>A payment arrives</b>
+          The bank alert lands, and the row is already written. Nothing typed.
+        </figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <video class="loop" width="540" height="1200" muted loop playsinline preload="none"
+                 poster="assets/loop-bill.png">
+            <source src="assets/loop-bill.webm" type="video/webm">
+            <source src="assets/loop-bill.mp4" type="video/mp4">
+            <img src="assets/loop-bill.png" width="540" height="1200"
+                 alt="A bill being written: two items with quantity and rate, a customer name and phone number, a total of seventy-five rupees, then the finished receipt as a PDF and the share sheet opening.">
+          </video>
+        </div>
+        <figcaption>
+          <b>A bill, and a PDF</b>
+          Two items, a customer, the total in words. One button shares it.
+        </figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <video class="loop" width="540" height="1200" muted loop playsinline preload="none"
+                 poster="assets/loop-language.png">
+            <source src="assets/loop-language.webm" type="video/webm">
+            <source src="assets/loop-language.mp4" type="video/mp4">
+            <img src="assets/loop-language.png" width="540" height="1200"
+                 alt="The Settings screen, then the Choose app language dialog offering English and Hindi, and then every screen and every button in Hindi.">
+          </video>
+        </div>
+        <figcaption>
+          <b>The language changes</b>
+          One tap in Settings and every screen follows. What is spoken is set apart from it.
+        </figcaption>
+      </figure>
+
+    </div>
+
+    <p class="scroll-hint">Tap a clip to pause it &middot; scroll sideways for more &rarr;</p>
+  </section>
 </div>
 
 <!-- =====================================================================
@@ -1292,40 +1340,6 @@ p { margin: 0; }
 </div>
 
 <!-- =====================================================================
-     PRICING
-     ===================================================================== -->
-<div class="wrap">
-  <section class="stack">
-    <div>
-      <p class="eyebrow">What it costs</p>
-      <h2>First 6 months free. Then &#8377;29 a month.</h2>
-    </div>
-
-    <div class="price-grid">
-      <div class="price-tag">
-        <span class="amount">&#8377;29</span>
-        <span class="after">a month, after the first six months</span>
-        <span class="free">Recording your payments is free and stays free.</span>
-      </div>
-
-      <ul class="terms">
-        <li><strong>First 6 months free for every new shop</strong> &mdash; no card, no payment details,
-        nothing entered up front.</li>
-        <li>Then <strong>&#8377;29 a month</strong>, or a plan billed every three months, every
-        six months or once a year at a lower monthly rate.</li>
-        <li>Every plan is a <strong>Google Play subscription</strong>: pay by UPI or card, it renews
-        on its own, and you can <strong>cancel any time in Google Play</strong>.</li>
-        <li><strong>Tracking your own money rather than running a shop? Free forever.</strong>
-        There is nothing to buy.</li>
-        <li>Whatever you pay, your payments keep being recorded and <strong>export stays
-        free</strong>. Your records are never held hostage.</li>
-        <li><strong>No ads.</strong> The app shows none and asks for no advertising identifier.</li>
-      </ul>
-    </div>
-  </section>
-</div>
-
-<!-- =====================================================================
      PRIVACY — ink band
      ===================================================================== -->
 <div class="band">
@@ -1408,9 +1422,23 @@ p { margin: 0; }
           </span>
         </span>
         <a class="btn btn--play" href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">Get it on Google Play</a>
+        <a class="foot-qr" href="https://play.google.com/store/apps/details?id=com.abhishekmaurya.subtracker">
+          <img src="assets/bohni-playstore-qr.png" width="124" height="124" loading="lazy"
+               alt="A QR code, captioned Install Bohni, that opens the Bohni listing on Google Play.">
+        </a>
       </div>
 
       <div class="foot-cols">
+        <div>
+          <h3>Tutorials</h3>
+          <ul>
+            <li><a href="https://youtu.be/vuWh_MvNK_g" lang="hi">बोहनी ऐप ट्यूटोरियल (हिंदी)</a></li>
+            <li><a href="https://youtu.be/SMGelnbsZ9k" lang="hi">सेटअप कैसे करें (हिंदी)</a></li>
+            <li><a href="https://youtu.be/zqsaVjRVALQ">How to use Bohni (English)</a></li>
+            <li><a href="https://youtu.be/kDTl8PA62Vo">Bohni tutorial (English)</a></li>
+          </ul>
+        </div>
+
         <div>
           <h3>The app</h3>
           <ul>
@@ -1428,7 +1456,7 @@ p { margin: 0; }
         <div>
           <h3>Support</h3>
           <ul>
-            <li><a href="mailto:supportsubtracker@gmail.com">supportsubtracker@gmail.com</a></li>
+            <li><a href="mailto:supportbohni@gmail.com">supportbohni@gmail.com</a></li>
           </ul>
           <p style="margin-top:.5rem">Your records sit on your phone and on no server we can
           reach, so we cannot look them up or recover them for you &mdash; those controls are all
@@ -1510,6 +1538,61 @@ p { margin: 0; }
         });
       }
     });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  // The loops are decoration wrapped around information: each one carries its
+  // caption burnt into the picture, a figcaption under it, and alt text on the
+  // fallback image. Nothing here is the only place a fact appears, so a
+  // visitor who never sees one of them loses nothing.
+
+  var loops = Array.prototype.slice.call(document.querySelectorAll(".loop"));
+  if (!loops.length) { return; }
+
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function play(v) {
+    v.preload = "auto";
+    var started = v.play();
+    // A refused autoplay is not an error — the poster stays up, which is fine.
+    if (started && typeof started.catch === "function") { started.catch(function () {}); }
+  }
+
+  loops.forEach(function (v) {
+    var fallback = v.querySelector("img");
+    v.setAttribute("tabindex", "0");
+    v.setAttribute("role", "img");
+    if (fallback) { v.setAttribute("aria-label", fallback.getAttribute("alt")); }
+
+    function toggle() {
+      if (v.paused) { play(v); } else { v.pause(); }
+    }
+    v.addEventListener("click", toggle);
+    v.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    });
+  });
+
+  // Nothing is fetched until a clip is on screen, and it stops again when it
+  // leaves — three videos decoding at once on a cheap phone is not free.
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) { e.target.pause(); return; }
+        if (still.matches) { return; }   // asked for less motion: leave the poster
+        play(e.target);
+      });
+    }, { rootMargin: "150px 0px", threshold: 0.25 });
+    loops.forEach(function (v) { io.observe(v); });
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { loops.forEach(function (v) { v.pause(); }); }
   });
 })();
 </script>
