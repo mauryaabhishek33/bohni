@@ -794,7 +794,7 @@ p { margin: 0; }
              is called is exactly the person who wants to watch it work. -->
         <p class="tut-line">
           Watch the full tutorial:
-          <a href="https://youtu.be/vuWh_MvNK_g" lang="hi">हिंदी में</a>
+          <a href="https://youtu.be/SMGelnbsZ9k" lang="hi">हिंदी में</a>
           <span aria-hidden="true">&middot;</span>
           <a href="https://youtu.be/zqsaVjRVALQ">in English</a>
         </p>
@@ -935,6 +935,80 @@ p { margin: 0; }
 </div>
 
 <!-- =====================================================================
+     NEW IN THIS VERSION - the version-14 features, cut from one recording
+     made on the shipping build. Native 392x850 rather than upscaled: the
+     source is a phone recording at that size, and .frame video is
+     width:100%/height:auto, so a slightly different ratio just gives a
+     slightly shorter clip rather than a distorted one.
+     ===================================================================== -->
+<div class="wrap">
+  <section class="stack" id="whats-new">
+    <div>
+      <p class="eyebrow">New in this version</p>
+      <h2>A bill for the payment that just arrived.</h2>
+      <p class="lede">
+        Three more clips from the shipping build. The customer pays, you hand him a bill for
+        that exact payment, and the shop decides what its book is for.
+      </p>
+    </div>
+
+    <div class="shots shots--demo">
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <video class="loop" width="392" height="850" muted loop playsinline preload="none"
+                 poster="assets/loop-billfrompayment.png">
+            <source src="assets/loop-billfrompayment.webm" type="video/webm">
+            <source src="assets/loop-billfrompayment.mp4" type="video/mp4">
+            <img src="assets/loop-billfrompayment.png" width="392" height="850"
+                 alt="A payment of twenty-five rupees in the ledger is tapped. The sheet that opens shows the amount, who it came from and that Google Pay saw it, and offers to make a bill for this payment. Tapping it opens a new bill with the total already filled in and the payer&rsquo;s name in the customer field.">
+          </video>
+        </div>
+        <figcaption>
+          <b>A bill for that payment</b>
+          Tap the payment, and the bill opens with the amount already in it. You add what you sold.
+        </figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <video class="loop" width="392" height="850" muted loop playsinline preload="none"
+                 poster="assets/loop-paymentapps.png">
+            <source src="assets/loop-paymentapps.webm" type="video/webm">
+            <source src="assets/loop-paymentapps.mp4" type="video/mp4">
+            <img src="assets/loop-paymentapps.png" width="392" height="850"
+                 alt="The Payment apps section of Settings listing the apps actually installed on the phone - Amazon Pay, BHIM, CRED, Google Pay, HDFC and ICICI iMobile - each marked already read with a tick.">
+          </video>
+        </div>
+        <figcaption>
+          <b>The apps on your phone</b>
+          Not a fixed list. It shows what is installed, and says which it already reads.
+        </figcaption>
+      </figure>
+
+      <figure class="shot" style="margin:0">
+        <div class="frame">
+          <video class="loop" width="392" height="850" muted loop playsinline preload="none"
+                 poster="assets/loop-takingsonly.png">
+            <source src="assets/loop-takingsonly.webm" type="video/webm">
+            <source src="assets/loop-takingsonly.mp4" type="video/mp4">
+            <img src="assets/loop-takingsonly.png" width="392" height="850"
+                 alt="The Record money you pay switch being turned off. Its description changes to say that only money coming in is kept and that a full backup still holds everything, and the row for announcing money you pay disappears from the list below. Turning it back on brings the row back.">
+          </video>
+        </div>
+        <figcaption>
+          <b>A book of takings only</b>
+          One switch. Money out leaves the totals and stops being read aloud, and nothing is deleted.
+        </figcaption>
+      </figure>
+
+    </div>
+
+    <p class="scroll-hint">Tap a clip to pause it &middot; scroll sideways for more &rarr;</p>
+  </section>
+</div>
+
+<!-- =====================================================================
      THE FOUR SECONDS AT THE COUNTER
      ===================================================================== -->
 <div class="wrap">
@@ -1052,8 +1126,8 @@ p { margin: 0; }
         </svg>
         <span class="k">Khata</span>
         <h3>The ledger keeps itself</h3>
-        <p>Read from the notifications UPI and bank apps already show, and from bank alert SMS if
-        you allow it. Amount, who paid, reference, time. Nothing typed.</p>
+        <p>Read from the notifications your UPI and bank apps already show. Amount, who paid,
+        reference, time. Nothing typed, and your text messages are never read.</p>
       </article>
 
       <article class="f">
@@ -1067,6 +1141,48 @@ p { margin: 0; }
         <h3>Add a cash sale in two taps</h3>
         <p>A shop&rsquo;s takings are not only UPI. And any row can be corrected or deleted
         &mdash; a misread amount included.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 12 H40 V33 H8 Z"></path>
+          <path class="soft" d="M13 19 H27"></path>
+          <path class="soft" d="M13 26 H22"></path>
+          <path class="hot" d="M31 17 L41 31 M41 17 L31 31" stroke-width="2.6"></path>
+        </svg>
+        <span class="k">Only real money</span>
+        <h3>Offers are not counted as payments</h3>
+        <p>Payment apps advertise in the same place they tell you a customer paid. A cashback
+        offer is not a sale, so it is never read out and never reaches your total &mdash; whichever
+        app it came from.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="7" y="9" width="14" height="14" rx="3"></rect>
+          <rect x="27" y="9" width="14" height="14" rx="3"></rect>
+          <rect x="7" y="27" width="14" height="14" rx="3"></rect>
+          <path class="hot" d="M29 34 l4 4 l8 -9" stroke-width="2.6"></path>
+        </svg>
+        <span class="k">Your apps</span>
+        <h3>Finds the payment apps on your phone</h3>
+        <p>Instead of guessing from a fixed list, Bohni shows what is actually installed and lets
+        you tick the ones it should read. Add an app it has never seen and its payments are marked
+        for you to check, until you are sure.</p>
+      </article>
+
+      <article class="f">
+        <svg class="mk" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 10 H33 a4 4 0 0 1 4 4 V38 H9 Z"></path>
+          <path class="hot" d="M15 20 H31" stroke-width="2.6"></path>
+          <path class="soft" d="M15 27 H31"></path>
+          <path d="M40 14 L28 34" stroke-width="2.2" opacity=".6"></path>
+        </svg>
+        <span class="k">Takings only</span>
+        <h3>Keep a book of what comes in</h3>
+        <p>One switch and money you pay out leaves the ledger, the totals, the charts and the
+        exported file, and stops being read aloud. Turn it back on and nothing is missing &mdash;
+        it was hidden, never thrown away.</p>
       </article>
 
       <article class="f">
@@ -1297,7 +1413,7 @@ p { margin: 0; }
       <figure class="shot" style="margin:0">
         <div class="frame">
           <img src="assets/screen-ledger-week.png" width="540" height="1200" loading="lazy"
-               alt="The Finance tab showing a net of 21,090 rupees for the last 7 days, 35,840 received against 14,750 spent, and a list of payments from PhonePe, Google Pay and bank SMS.">
+               alt="The Finance tab showing a net of 21,090 rupees for the last 7 days, 35,840 received against 14,750 spent, and a list of payments from PhonePe, Google Pay and your bank's app.">
         </div>
         <figcaption><b>A week&rsquo;s takings</b>Received against spent, with the app each payment came from.</figcaption>
       </figure>
@@ -1360,10 +1476,10 @@ p { margin: 0; }
           not a payment is discarded immediately.</p>
         </div>
         <div>
-          <h3>Bank SMS is optional</h3>
-          <p>The app can receive new bank alerts so card and ATM payments reach your ledger too.
-          Refuse it and the app still works; it simply records fewer payments, and tells you so.
-          It cannot open your message history.</p>
+          <h3>Your messages are never read</h3>
+          <p>Bohni reads notifications, not messages. It does not ask for permission to read your
+          text messages, and without that permission it cannot open your message history at all
+          &mdash; not the old ones, and not the ones arriving now.</p>
         </div>
         <div>
           <h3>What does leave the phone</h3>
@@ -1471,6 +1587,12 @@ p { margin: 0; }
         written by other companies, whose wording changes without notice, so it may occasionally
         miss a payment or read a detail wrongly &mdash; confirm the payment in your bank or UPI app
         before handing over goods.
+        <br><br>
+        <strong>Bohni &mdash; UPI Alerts and Bills</strong> is published by
+        <a href="https://nejendigital.com/" rel="noopener">Nejendigital</a>. It is not affiliated
+        with, endorsed by, or connected to any other company, product or service that uses the
+        name Bohni. <em>Bohni</em> is an everyday Hindi word for the first sale of the day, and
+        the app is named for that and nothing else.
         <br><br>
         &copy; 2026 <a href="https://nejendigital.com/" rel="noopener">Nejendigital</a>. All rights reserved.
       </p>
